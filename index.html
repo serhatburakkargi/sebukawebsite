@@ -3,100 +3,94 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Butonlu Sayfa — Salt Okunur</title>
+<title>Butonlu Sayfa</title>
 <style>
-:root{ --bg:#0b0f17; --card:#0b1220; --accent:#00b894; --muted:#9fb0c8; --btn:#142235; }
+:root{--bg:#0b0f17;--card:#0b1220;--accent:#00b894;--muted:#9fb0c8;--btn:#142235;}
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter,system-ui,Roboto,-apple-system,Segoe UI,Arial;color:#e6eef8;
-background:linear-gradient(180deg,#051026 0%,var(--bg) 100%);display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
-.container{width:100%;max-width:720px;padding:18px;border-radius:16px;background:var(--card);box-shadow:0 12px 40px rgba(2,6,23,0.6)}
+background:linear-gradient(180deg,#051026 0%,var(--bg) 100%);display:flex;align-items:center;
+justify-content:center;min-height:100vh;padding:20px;}
+.container{width:100%;max-width:720px;padding:18px;border-radius:16px;background:var(--card);
+box-shadow:0 12px 40px rgba(2,6,23,0.6)}
 .header{display:flex;gap:12px;align-items:center;margin-bottom:14px}
-.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.03),transparent);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03)}
+.logo{width:56px;height:56px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);
+display:flex;align-items:center;justify-content:center}
 .logo strong{color:var(--accent)}
 h1{font-size:18px;margin:0}
 .lead{font-size:13px;color:var(--muted);margin-top:4px}
 .buttons{display:flex;flex-direction:column;gap:12px;margin-top:12px}
-.btn{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;background:var(--btn);border:1px solid rgba(255,255,255,0.02);cursor:pointer;overflow:hidden}
+.btn{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;background:var(--btn);
+border:1px solid rgba(255,255,255,0.06);cursor:pointer;overflow:hidden}
 .btn:hover{transform:translateY(-3px);transition:transform .15s}
-.icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.02);flex-shrink:0;font-size:20px}
+.icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+background:rgba(255,255,255,0.06);flex-shrink:0;font-size:20px}
 .label{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%}
 .sublabel{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:35%}
 .footer{margin-top:12px;font-size:12px;color:var(--muted);text-align:center}
 </style>
 </head>
 <body>
-<div class="container" role="application" aria-label="Butonlu Sayfa">
+<div class="container">
   <div class="header">
     <div class="logo"><strong>SB</strong></div>
     <div>
       <h1>Butonlu Sayfa</h1>
-      <div class="lead">Salt okunur — <code>butonlar.json</code> dosyan nasılsa öyle görünür</div>
+      <div class="lead">Veriler JSON'dan yükleniyor</div>
     </div>
   </div>
 
-  <div class="buttons" id="buttons" aria-live="polite"></div>
-  <div class="footer">Kaynak: <code>butonlar.json</code></div>
+  <div class="buttons" id="buttons"></div>
+  <div class="footer">Sabit JSON'dan — düzenleme yok</div>
 </div>
 
 <script>
-const JSON_PATH = "butonlar.json";
-let fileData = {};
+const JSON_URL = "butonlar.json"; // senin dosyanın adı (yeniden adlandırabilirsin)
 
-function escapeHtml(s){ if(!s) return ""; return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function escapeHtml(s){return s?String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])):"";}
 
-function renderButtons(list){
-  const c = document.getElementById("buttons"); c.innerHTML = "";
+function render(list){
+  const c=document.getElementById("buttons"); c.innerHTML="";
   (list||[]).forEach(it=>{
-    const b = document.createElement("div"); b.className = "btn"; b.tabIndex = 0;
-    const icon = escapeHtml(it.icon || "🔗");
-    const label = escapeHtml(it.label || "");
-    let sub = "";
-    if(it.type === "mail") sub = escapeHtml(it.mail || "E-posta");
-    else if(it.type === "dosya") sub = (fileData[it.id]?.name || "Dosya");
-    else sub = escapeHtml(it.url || "");
-    b.innerHTML = '<div class="icon" aria-hidden="true">'+ icon +'</div>' +
-                  '<div style="min-width:0"><div class="label">'+ label +'</div>' +
-                  '<div class="sublabel">'+ sub +'</div></div>';
-    b.addEventListener("click", ()=> openItem(it));
-    b.addEventListener("keydown", (e)=>{ if(e.key === "Enter") openItem(it); });
+    const b=document.createElement("div"); b.className="btn";
+    const icon=escapeHtml(it.icon||"🔗");
+    const label=escapeHtml(it.label||"");
+    let sub="";
+    if(it.type==="mail") sub=escapeHtml(it.mail||"");
+    else sub=escapeHtml(it.url||"");
+    b.innerHTML=`
+      <div class="icon">${icon}</div>
+      <div style="min-width:0">
+        <div class="label">${label}</div>
+        <div class="sublabel">${sub}</div>
+      </div>`;
+    b.onclick=()=>openItem(it);
     c.appendChild(b);
   });
 }
 
 function openItem(it){
-  if(it.type === "mail"){
-    const mail = it.mail || "";
-    if(!mail){ alert("Bu buton için e-posta adresi yok."); return; }
-    window.location.href = "mailto:" + mail; return;
+  if(it.type==="mail" && it.mail){
+    window.location.href="mailto:"+it.mail; return;
   }
-  if(it.type === "dosya"){
-    const f = fileData[it.id];
-    if(!f){ alert("Bu butona dosya bağlı değil."); return; }
-    const href = f.href || f.dataUrl; // href (normal URL) ya da dataUrl (base64)
-    if(!href){ alert("Dosya URL'i bulunamadı."); return; }
-    const a = document.createElement("a"); a.href = href; a.download = f.name || ""; a.click(); return;
+  if(it.url){
+    window.open(it.url,"_blank","noopener"); return;
   }
-  if(it.url){ window.open(it.url, "_blank", "noopener"); return; }
-  alert("Bu buton için işlem tanımlı değil.");
+  alert("Bu butonun bağlantısı yok.");
 }
 
-async function loadJSON(){
-  const res = await fetch(JSON_PATH, { cache: "no-store" });
-  if(!res.ok) throw new Error("butonlar.json bulunamadı");
-  const j = await res.json();
-  // Esnek şema:
-  // 1) Düz liste: [ {...}, {...} ]
-  // 2) Nesne: { data:[...], files:{ "id": {name, href|dataUrl} } }
-  if(Array.isArray(j)) return { data: j, files: {} };
-  return { data: j.data || [], files: j.files || {} };
+async function load(){
+  try{
+    const res=await fetch(JSON_URL,{cache:"no-store"});
+    if(!res.ok) throw new Error("Yüklenemedi");
+    const data=await res.json();
+    render(data);
+  }catch(e){
+    document.getElementById("buttons").innerHTML="<div style='color:#9fb0c8'>JSON yüklenemedi.</div>";
+    console.error(e);
+  }
 }
 
-loadJSON()
-  .then(({data, files}) => { fileData = files || {}; renderButtons(data || []); })
-  .catch(err => {
-    console.error(err);
-    document.getElementById("buttons").innerHTML = "<div style='color:#ff8080'>butonlar.json yüklenemedi.</div>";
-  });
+load();
 </script>
 </body>
 </html>
