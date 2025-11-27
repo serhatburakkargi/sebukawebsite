@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "label": "_sebuka_",
+    "url": "https://www.instagram.com/_sebuka_/",
+    "type": "link",
+    "icon": "📷",
+    "mail": ""
+  },
+  {
+    "id": 1762450701608,
+    "label": "sebukagraphic",
+    "url": "https://www.instagram.com/sebukagraphic/",
+    "type": "link",
+    "icon": "🔗",
+    "mail": ""
+  },
+  {
+    "id": 1762450702919,
+    "label": "LinkedIn",
+    "url": "https://www.linkedin.com/in/serhatburakkargi/",
+    "type": "link",
+    "icon": "🔗",
+    "mail": ""
+  },
+  {
+    "id": 2,
+    "label": "E-posta",
+    "url": "",
+    "type": "mail",
+    "icon": "✉️",
+    "mail": "serhatbrkkrg@gmail.com"
+  },
+  {
+    "id": 1763302485455,
+    "label": "Spotify Gençlik Festivali",
+    "url": "https://open.spotify.com/playlist/2EvDlwyqJh9BzOq5QiBsLM?si=a45d2aeedd444fa8",
+    "type": "link",
+    "icon": "🔗",
+    "mail": ""
+  }
+]
